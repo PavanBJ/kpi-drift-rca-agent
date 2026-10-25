@@ -1,24 +1,104 @@
-﻿# KPI Drift RCA Agent
+# KPI Drift RCA Agent
 
-> An enterprise-grade Multi-Agent Root Cause Analysis system for analytics engineers and BI teams â€” diagnoses metric drift without hallucinated math by pairing deterministic Pandas variance decomposition with Gemini diagnostic reasoning, and dispatches assigned operational incident tickets to cross-functional leads.
+[![Live Interactive Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://pavanbj.github.io/kpi-drift-rca-agent/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Zero Math Hallucinations](https://img.shields.io/badge/Math-100%25%20Verified%20(Pandas)-emerald?style=for-the-badge)](https://pandas.pydata.org/)
+[![Google GenAI SDK](https://img.shields.io/badge/LLM-Gemini%202.5%20Flash-violet?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
+
+> An enterprise-grade Multi-Agent Root Cause Analysis (RCA) copilot for analytics engineers and operations teams. Diagnoses KPI metric drift without arithmetic hallucinations by pairing deterministic Pandas variance decomposition with Gemini diagnostic reasoning, and autonomously dispatches SLA-bound operational incident tickets.
+
+[**Explore the Live Interactive Demo**](https://pavanbj.github.io/kpi-drift-rca-agent/)
 
 ---
 
 ## Overview
 
 ### Problem Statement & Intended Users
-- **Problem**: When a critical business KPI (conversions, revenue, DAU) unexpectedly drops, analytics teams spend hours manually slicing dimensional cubes to isolate which cohort drove the change. LLMs alone cannot reliably compute multi-dimensional variance decomposition without arithmetic hallucinations, nor do single-prompt agents translate statistical anomalies into actionable operational incident response plans.
+- **Problem**: When a critical business KPI (conversions, revenue, DAU) unexpectedly drops, analytics teams spend hours manually slicing dimensional cubes to isolate culprit cohorts. LLMs alone cannot reliably compute multi-dimensional variance decomposition without arithmetic hallucinations, nor do single-prompt agents translate statistical anomalies into actionable operational incident response plans.
 - **Intended Users**: Analytics engineers, BI analysts, data scientists, Growth leads, DevOps engineers, and on-call incident response teams who need trustworthy metric triage with immediate operational dispatch.
 
-### Key Features
-- **Deterministic-First Architecture**: 100% of the math is computed by Pandas â€” exact cohort deltas, percentage contributions, and optional conversion-rate decomposition. The LLM never touches arithmetic.
-- **Multi-Agent Stakeholder Dispatch Sub-Agent**: Modular secondary agent (`stakeholder_dispatch.py`) that maps isolated culprit cohorts and diagnostic hypotheses into prioritized (P0/P1/P2), SLA-bound operational action tickets assigned to Engineering/DevOps, Growth/Paid Media, and Regional Managers.
+### Key Capabilities
+- **Deterministic-First Architecture**: 100% of the math is computed by Pandas -- exact cohort deltas, percentage contributions, and optional conversion-rate decomposition. The LLM never touches arithmetic.
+- **Multi-Agent Stakeholder Dispatch**: Modular secondary agent (`stakeholder_dispatch.py`) that maps isolated culprit cohorts and diagnostic hypotheses into prioritized (P0/P1/P2), SLA-bound operational action tickets assigned to Engineering/DevOps, Growth/Paid Media, and Regional Managers.
 - **Dual-Metric & Rate Decomposition**: Decomposes both absolute volume drift (e.g., conversion count drop) and conversion rate drift (e.g., CR% = conversions / sessions) when a secondary metric is available.
 - **ASCII Metric Waterfall Visualization**: Terminal-rendered visual waterfall and cohort variance breakdown for instant, intuitive anomaly inspection.
-- **Synthetic Sample Dataset Generator CLI**: Synthesizes multi-dimensional mock datasets with configurable drift profiles (`checkout_dropoff`, `payment_gateway_failure`, `mobile_release_regression`, `ad_campaign_fatigue`).
+- **Synthetic Dataset Generator CLI**: Synthesizes multi-dimensional mock datasets with configurable drift profiles (`checkout_dropoff`, `payment_gateway_failure`, `mobile_release_regression`, `ad_campaign_fatigue`).
 - **Flexible Export Formats**: Exports comprehensive markdown reports (`report.md`) or machine-readable JSON (`--format json`) for integration with PagerDuty, Slack bots, or automated alerting pipelines.
 - **Zero-Regression Offline Mode**: Works out of the box with zero flags (`python main.py`), gracefully falling back to deterministic domain rules if `GEMINI_API_KEY` is not configured.
-- **Automated Test Suite**: Includes a dedicated `test_agent.py` suite covering decomposition math, dual-metric rates, guardrails, dispatch tickets, and data synthesis.
+- **Automated Unit Test Suite**: Includes a dedicated `test_agent.py` suite covering decomposition math, dual-metric rates, guardrails, dispatch tickets, and data synthesis.
+
+---
+
+## Multi-Agent Architecture & Data Flow
+
+```text
++----------------------------------------------------------------------------------+
+|                   KPI Drift RCA Multi-Agent Architecture                         |
++----------------------------------------------------------------------------------+
+|                                                                                  |
+|   [baseline.csv]                                                                 |
+|   [current.csv]  ----->                                                          |
+|                       |                                                          |
+|   +--------------------------------------------------------------------------+   |
+|   |  AGENT 1: Deterministic Mathematical Harness (Pandas)                   |   |
+|   |                                                                          |   |
+|   |  * Cohort-level Delta = Current - Base (Zero Hallucinations)             |   |
+|   |  * Percentage contribution to total variance                             |   |
+|   |  * Dual-metric Conversion Rate (CR%) decomposition                       |   |
+|   |  * Terminal ASCII Waterfall & Variance Bar Chart                         |   |
+|   +-------------------------------------+------------------------------------+   |
+|                                         | Verified Math Facts                    |
+|                                         v                                        |
+|   +--------------------------------------------------------------------------+   |
+|   |  AGENT 2: Diagnostic Reasoning Engine (Gemini)                           |   |
+|   |                                                                          |   |
+|   |  * Executive impact summary                                              |   |
+|   |  * Primary anomaly cohort isolation                                      |   |
+|   |  * Plausible technical & business hypotheses                             |   |
+|   |  * Targeted triage SQL queries & telemetry log commands                  |   |
+|   +-------------------------------------+------------------------------------+   |
+|                                         | Culprit Cohort + Hypotheses            |
+|                                         v                                        |
+|   +--------------------------------------------------------------------------+   |
+|   |  AGENT 3: Stakeholder Action Dispatch Sub-Agent (--dispatch)             |   |
+|   |                                                                          |   |
+|   |  * Engineering / DevOps Lead : Rollbacks, CDN, API error tracing (P0/2h) |   |
+|   |  * Growth / Paid Media Lead  : Bid caps, UTM audits, pixel health (P1/4h)|   |
+|   |  * Regional / Geo Manager    : Local gateway status, 3DS banking (P1/4h) |   |
+|   +-------------------------------------+------------------------------------+   |
+|                                         |                                        |
+|                                         v                                        |
+|   +--------------------------------------------------------------------------+   |
+|   |  OUTPUT PIPELINE                                                         |   |
+|   |  * Interactive Web Demo (demo.html / GitHub Pages)                       |   |
+|   |  * Rich Terminal Console output with ASCII waterfall                     |   |
+|   |  * Executive Markdown Report (report.md)                                 |   |
+|   |  * Structured JSON Export (--format json)                                |   |
+|   +--------------------------------------------------------------------------+   |
++----------------------------------------------------------------------------------+
+```
+
+---
+
+## Directory Structure
+
+```text
+kpi-drift-rca-agent/
+|-- data/
+|   |-- baseline.csv            # Baseline period cohort data (mock)
+|   +-- current.csv             # Current period cohort data (mock)
+|-- .env.example                # Template -- GEMINI_API_KEY placeholder only
+|-- .gitignore                  # Ignores .env, report.md, __pycache__/, .venv/
+|-- demo.html                   # Interactive light-theme web presentation demo
+|-- index.html                  # GitHub Pages root (live interactive demo)
+|-- LICENSE                     # MIT Open Source License
+|-- main.py                     # Agent entry point (harness + reasoning + CLI)
+|-- README.md                   # Comprehensive documentation
+|-- requirements.txt            # Minimal Python dependencies (3 packages)
+|-- stakeholder_dispatch.py     # Modular Stakeholder Incident Dispatch sub-agent
++-- test_agent.py               # Automated unit test suite (10 test cases)
+```
 
 ---
 
@@ -34,82 +114,6 @@
 
 ---
 
-## Multi-Agent Architecture & Data Flow
-
-```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                   KPI Drift RCA Multi-Agent Architecture                         â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                                  â”‚
-â”‚   [baseline.csv]                                                                 â”‚
-â”‚   [current.csv]  â”€â”€â”€â”€â”€â”                                                          â”‚
-â”‚                       â–¼                                                          â”‚
-â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚   â”‚  AGENT 1: Deterministic Mathematical Harness (Pandas)                   â”‚   â”‚
-â”‚   â”‚                                                                          â”‚   â”‚
-â”‚   â”‚  â€¢ Cohort-level Î” = Current - Base (Zero Hallucinations)                 â”‚   â”‚
-â”‚   â”‚  â€¢ % contribution to total variance                                      â”‚   â”‚
-â”‚   â”‚  â€¢ Dual-metric Conversion Rate (CR%) decomposition                       â”‚   â”‚
-â”‚   â”‚  â€¢ ASCII Metric Waterfall & Variance Bar Chart                           â”‚   â”‚
-â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚                                         â”‚ Verified Math Facts                    â”‚
-â”‚                                         â–¼                                        â”‚
-â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚   â”‚  AGENT 2: Diagnostic Reasoning Engine (Gemini)                           â”‚   â”‚
-â”‚   â”‚                                                                          â”‚   â”‚
-â”‚   â”‚  â€¢ Executive impact summary                                              â”‚   â”‚
-â”‚   â”‚  â€¢ Primary anomaly cohort isolation                                      â”‚   â”‚
-â”‚   â”‚  â€¢ Plausible technical & business hypotheses                             â”‚   â”‚
-â”‚   â”‚  â€¢ Targeted triage SQL queries & telemetry log commands                  â”‚   â”‚
-â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚                                         â”‚ Isolated Culprit + Hypotheses          â”‚
-â”‚                                         â–¼                                        â”‚
-â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚   â”‚  AGENT 3: Stakeholder Action Dispatch Sub-Agent (--dispatch)             â”‚   â”‚
-â”‚   â”‚                                                                          â”‚   â”‚
-â”‚   â”‚  â€¢ Engineering / DevOps Lead : Rollbacks, CDN, API error tracing (P0/2h) â”‚   â”‚
-â”‚   â”‚  â€¢ Growth / Paid Media Lead  : Bid caps, UTM audits, pixel health (P1/4h)â”‚   â”‚
-â”‚   â”‚  â€¢ Regional / Geo Manager    : Local gateway status, 3DS banking (P1/4h) â”‚   â”‚
-â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚                                         â”‚                                        â”‚
-â”‚                                         â–¼                                        â”‚
-â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚   â”‚  OUTPUT PIPELINE                                                         â”‚   â”‚
-â”‚   â”‚  â€¢ Rich Terminal Console output with ASCII waterfall                     â”‚   â”‚
-â”‚   â”‚  â€¢ Executive Markdown Report (report.md)                                 â”‚   â”‚
-â”‚   â”‚  â€¢ Structured JSON Export (--format json)                                â”‚   â”‚
-â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-```
-
-**Step-by-step flow:**
-1. **CSV Ingestion & Validation** â€” Loads baseline and current period CSVs; verifies file-size limits, row count limits, and required column schemas.
-2. **Deterministic Decomposition** â€” Pandas groups by dimensions, calculates exact cohort deltas, percentage contributions, and conversion rate drift.
-3. **ASCII Waterfall Rendering** â€” Renders an intuitive visual cohort waterfall chart directly to the terminal.
-4. **Diagnostic Reasoning** â€” Gemini (or built-in deterministic reasoning engine) generates hypotheses and targeted triage SQL queries.
-5. **Stakeholder Action Dispatch (Optional via `--dispatch`)** â€” The modular sub-agent maps findings into role-assigned operational tickets with priorities and SLAs.
-6. **Report Export** â€” Formats and writes the consolidated output to Markdown or JSON with sensitive path protection.
-
----
-
-## Directory Structure
-
-```text
-./
-â”œâ”€â”€ data/
-â”‚   â”œâ”€â”€ baseline.csv            # Baseline period cohort data (mock)
-â”‚   â””â”€â”€ current.csv             # Current period cohort data (mock)
-â”œâ”€â”€ .env.example                # Template â€” GEMINI_API_KEY placeholder only
-â”œâ”€â”€ .gitignore                  # Ignores .env, report.md, __pycache__/, .venv/
-â”œâ”€â”€ main.py                     # Agent entry point (harness + reasoning + CLI)
-â”œâ”€â”€ README.md                   # Comprehensive documentation
-â”œâ”€â”€ requirements.txt            # Minimal Python dependencies (3 packages)
-â”œâ”€â”€ stakeholder_dispatch.py     # Modular Multi-Agent Stakeholder Dispatch sub-agent
-â””â”€â”€ test_agent.py               # Automated unit test suite (10 test cases)
-```
-
----
-
 ## Prerequisites
 
 Before running this project, ensure you have:
@@ -121,8 +125,9 @@ Before running this project, ensure you have:
 
 ## Installation & Setup
 
-1. **Navigate to the project directory:**
+1. **Clone the repository:**
    ```bash
+   git clone https://github.com/PavanBJ/kpi-drift-rca-agent.git
    cd kpi-drift-rca-agent
    ```
 
@@ -143,13 +148,10 @@ Before running this project, ensure you have:
    ```
 
 4. **Configure your API key (optional for live Gemini reasoning):**
-
-   Copy the example file and add your key:
    ```bash
    cp .env.example .env
-   # Then edit .env and replace the placeholder with your actual key
+   # Edit .env and paste your GEMINI_API_KEY
    ```
-
    Or set it directly in your terminal:
    ```bash
    # Windows (PowerShell):
@@ -161,29 +163,21 @@ Before running this project, ensure you have:
 
 ---
 
-## Configuration & Environment Variables
-
-| Variable Name | Required | Default | Description |
-|:---|:---|:---|:---|
-| `GEMINI_API_KEY` | Optional | *None* | API key for Google Gemini. If not set, agent runs in offline deterministic diagnostic mode. |
-
----
-
 ## How to Run
 
-### Quickstart (Zero-Flag Execution)
+### 1. Quickstart (Zero-Flag Execution)
 Runs on bundled mock data with deterministic decomposition, ASCII waterfall, and executive RCA report:
 ```bash
 python main.py
 ```
 
-### Multi-Agent Stakeholder Dispatch
+### 2. Multi-Agent Stakeholder Action Dispatch
 Activate the Stakeholder Dispatch Sub-Agent to generate assigned incident response tickets:
 ```bash
 python main.py --dispatch
 ```
 
-### Synthetic Dataset Generator CLI
+### 3. Synthetic Dataset Generator CLI
 Synthesize configurable drift scenarios on demand:
 ```bash
 # List available scenarios
@@ -196,22 +190,15 @@ python main.py --generate-sample payment_gateway_failure --dispatch
 python main.py --generate-sample mobile_release_regression
 ```
 
-### Structured JSON Output
+### 4. Structured JSON Output
 Export machine-readable JSON for integration into incident bots (PagerDuty, Slack):
 ```bash
 python main.py --dispatch --format json --output-report incident_payload.json
 ```
 
-### Custom Dataset Run
+### 5. Custom Dataset Run
 ```bash
-python main.py \
-  --baseline data/baseline.csv \
-  --current data/current.csv \
-  --metric conversions \
-  --secondary-metric sessions \
-  --dimensions country,device,channel \
-  --dispatch \
-  --output-report rca_oct_2026.md
+python main.py   --baseline data/baseline.csv   --current data/current.csv   --metric conversions   --secondary-metric sessions   --dimensions country,device,channel   --dispatch   --output-report rca_oct_2026.md
 ```
 
 ---
@@ -259,7 +246,7 @@ date,country,device,channel,conversions,sessions
 2026-10-17,UK,Desktop,Direct,145,2450
 ```
 
-### Example Output (`python main.py --dispatch`)
+### Example Terminal Output (`python main.py --dispatch`)
 
 ```text
 =================================================================
@@ -351,9 +338,8 @@ Report exported successfully to: report.md
 
 ---
 
-## How to Test
+## Automated Testing
 
-### Automated Unit Test Suite
 Execute the built-in test suite to verify math decomposition, rate drift, guardrails, dispatch tickets, and synthetic data generation:
 
 ```bash
@@ -381,35 +367,6 @@ Ran 10 tests in 0.123s
 OK
 ```
 
-### Manual Verification Commands
-
-```bash
-# 1. Zero-flag default execution (must exit 0)
-python main.py
-
-# 2. Multi-agent stakeholder dispatch (must exit 0)
-python main.py --dispatch
-
-# 3. Synthetic sample data generator test
-python main.py --generate-sample payment_gateway_failure --dispatch
-
-# 4. JSON output verification
-python main.py --format json --output-report sample.json
-
-# 5. Schema validation error guardrail test
-python main.py --metric non_existent_column
-# Expected: clean exit 1 with available column listing
-```
-
----
-
-## Known Limitations
-
-- **Pre-aggregated CSV Input Required**: The agent expects tabular CSV data with consistent dimension schemas across baseline and current files. It does not execute live transactional database queries directly.
-- **Descriptive Dimension Column Naming**: Diagnostic reasoning relies on standard descriptive column headers (e.g., `country`, `device`, `channel`, `campaign`). Obfuscated column names (e.g., `dim_1`, `col_a`) reduce LLM hypothesis specificity.
-- **API Rate Limits**: When using Google AI Studio free tiers, per-minute request rate limits apply. The agent cycles across model fallbacks (`gemini-2.5-flash`, `gemini-3.5-flash-lite`, etc.) and falls back to deterministic reasoning if remote quotas are exceeded.
-- **Non-deterministic Diagnostic Reasoning**: While mathematical variance decomposition is 100% deterministic and reproducible, LLM-generated qualitative hypotheses and queries will naturally vary across model executions.
-
 ---
 
 ## Guardrails
@@ -430,35 +387,14 @@ The agent implements comprehensive enterprise safety layers:
 
 ---
 
-## Security & Privacy Considerations
+## Community Origin & Upstream Contribution
 
-- **Secrets Handling**: The API key is loaded via environment variable or `.env` file (managed by `python-dotenv`). The `.gitignore` excludes `.env` to prevent accidental commits. The `.env.example` contains only placeholder values.
-- **Data Privacy**: Only aggregated cohort-level statistics (not raw row-level data) are sent to the Gemini API. Dimension values are sanitized before prompt assembly.
-- **Safety**: The agent does not execute shell commands, write to production databases, or perform destructive operations.
-
----
-
-## Future Improvements
-
-- [ ] Add direct BigQuery / Snowflake data warehouse connectors for real-time drift extraction.
-- [ ] Support local models via Ollama for air-gapped enterprise deployments.
-- [ ] Add streaming responses for interactive terminal inspection.
-- [ ] Multi-period trend analysis (3+ snapshots) for drift velocity and seasonality adjustment.
-- [ ] PagerDuty / Slack Webhook integration for direct automated ticket publishing.
+This project was developed as an open-source contribution to the community repository:
+- **Upstream Monorepo**: [gdgcblr/open-source-agents](https://github.com/gdgcblr/open-source-agents)
+- **License**: MIT License
 
 ---
 
 ## License
 
-*This project is contributed under the repository's open-source license.*
-
-
----
-
-## Community Origin & Upstream Contribution
-
-This project was originally created and submitted as an open-source contribution to the community monorepo:
-- **Upstream Repository**: [gdgcblr/open-source-agents](https://github.com/gdgcblr/open-source-agents)
-- **Pull Request**: [View Upstream PR](https://github.com/gdgcblr/open-source-agents/pulls)
-- **License**: MIT
-
+This project is open-source and available under the [MIT License](LICENSE).\n
